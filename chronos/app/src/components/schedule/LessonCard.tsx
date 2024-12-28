@@ -20,7 +20,6 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
     return null; // Ждем загрузки шрифтов
   }
 
-  SplashScreen.hideAsync();
   return (
     <View style={styles.card}>
       <View style={styles.container}>
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 12,
     marginTop: 4,
-    marginHorizontal: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,

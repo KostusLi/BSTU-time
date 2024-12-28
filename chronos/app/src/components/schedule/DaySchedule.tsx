@@ -13,14 +13,15 @@ interface DayScheduleProps {
   lessons: Lesson[];
   dayName: string;
   date: Date;
+  subgroup: number;
 }
 
-const DaySchedule = ({ lessons, dayName, date }: DayScheduleProps) => {
+const DaySchedule = ({ lessons, dayName, date, subgroup }: DayScheduleProps) => {
   const [fontsLoaded] = useFonts({
     'Anton': require('@/assets/fonts/Anton-Regular.ttf'),
   });
   if (!fontsLoaded) {
-    return null; 
+    return null;
   }
 
   SplashScreen.hideAsync();
@@ -33,9 +34,10 @@ const DaySchedule = ({ lessons, dayName, date }: DayScheduleProps) => {
         <Text style={styles.dayName}>{dayName.toUpperCase()}</Text>
         <Text style={styles.year}>{getYear(date)}</Text>
       </View>
-      {lessons.map(lesson => (
-        <LessonCard key={lesson.id} lesson={lesson} />
-      ))}
+      {lessons.map(lesson => {
+        if(!lesson.subgroup || (lesson.subgroup && lesson.subgroup === subgroup))
+        return <LessonCard key={lesson.id} lesson={lesson} />
+      })}
     </View>
   );
 };
@@ -56,10 +58,11 @@ const styles = StyleSheet.create({
   }
   ,
   dayName: {
-    position: 'absolute', 
-    left: 0, 
+    position: 'absolute',
+    left: 0,
+    right: 0,
     bottom: 0,
-    textAlign: 'center', 
+    textAlign: 'center',
     fontSize: 24,
     fontFamily: 'Anton',
     color: '#C4B7A5',
