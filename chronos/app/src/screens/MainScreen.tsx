@@ -1,66 +1,75 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, StatusBar, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, StatusBar, Image, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import DaySchedule from '../components/schedule/DaySchedule';
 import { Schedule } from '../types/schedule';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { getWeekDates } from '../utils/dateHelpers';
 
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+
 
 import Placeholder from '@/assets/images/Ellipse 1.png';
+import SettingsLogo from '@/assets/images/Settings (1).png'
 
-SplashScreen.preventAutoHideAsync();
+
 
 export default function MainScreen() {
+
+  const router = useRouter();
+
   // Инициализация шрифтов
-  const [fontsLoaded] = useFonts({
-    Stetica: require('@/assets/fonts/AA Stetica Bold.otf'),
-  });
+  
 
   const [appIsReady, setAppIsReady] = useState(false);
+
   const [weekNum, setWeekNum] = useState(0);
   const [subgroup, setSubgroup] = useState(2);
   const [faculty, setFaculty] = useState('ИТ');
   const [speciality, setSpeciality] = useState('ПИ');
   const [course, setCourse] = useState(1);
   const [group, setGroup] = useState(9);
+  const [currentWeek, setCurrentWeek] = useState(0)
 
   const weekDates = getWeekDates(weekNum);
   const weekSchedule = Schedule.weeks[weekNum]?.days || [];
 
 
-  useEffect(() => {
-    async function prepare() {
-      if (fontsLoaded) {
-        await SplashScreen.hideAsync();
-        setAppIsReady(true);
-      }
-    }
-    prepare();
-  }, [fontsLoaded]);
+ 
 
-  if (!appIsReady) {
-    return <View style={{ flex: 1, backgroundColor: '#DADDE1' }} />;
+  const changeWeek = () => {
+    setWeekNum(weekNum === 0 ? 1 : 0)
   }
+
 
   return (
     <>
-    <StatusBar
-    backgroundColor={'#718296'}
-    />
+      <StatusBar
+        backgroundColor={'#718296'}
+      />
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <Text style={styles.BSTU}>БГТУ</Text>
+
+          <Pressable
+            style={styles.settingsContainer}
+            onPress={() => router.push('/src/screens/SettingsScreen')}
+          >
+            <Image
+              style={styles.settings}
+              source={SettingsLogo}
+            />
+          </Pressable>
+
         </View>
         <View style={styles.headerInfo}>
           <View style={styles.infoCard}>
             <Image style={styles.logo}
-            source={Placeholder}
+              source={Placeholder}
             />
             <View >
               <Text style={styles.title}>
-                {faculty + ' ' + speciality+'-'+group +'-'+subgroup}
+                {faculty + ' ' + speciality + '-' + group + '-' + subgroup}
               </Text>
               <Text style={styles.subTitle}>
                 {course} курс
@@ -70,9 +79,12 @@ export default function MainScreen() {
           </View>
         </View>
         <View style={styles.headerWeek}>
-          <Text style={styles.week}>
-            WEEK {weekNum + 1}
-          </Text>
+          <Pressable
+            onPress={changeWeek}
+            hitSlop={20}
+          >
+            <Text style={weekNum === currentWeek ? styles.CurrentWeek : styles.NonCurrentWeek}> WEEK {weekNum + 1}</Text>
+          </Pressable>
         </View>
       </View>
 
@@ -89,9 +101,7 @@ export default function MainScreen() {
           ))
         }
       </ScrollView>
-      <View style={styles.bottomStripe}>
-
-      </View>
+      <View style={styles.bottomStripe}></View>
     </>
 
   )
@@ -112,16 +122,28 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: 10,
   },
-  header:{
+  header: {
     // flex: 1,
   },
-  headerTop:{
+  headerTop: {
     height: 80,
     backgroundColor: '#718296',
+    paddingRight: 20,
     // paddingLeft: 10,
   },
-  
-  BSTU:{
+  settingsContainer: {
+    width: 30,
+    position: 'absolute',
+    right: 20,
+  },
+
+  settings: {
+    width: 30,
+    height: 30,
+    alignSelf: 'flex-end',
+  },
+
+  BSTU: {
     fontFamily: 'Stetica',
     fontWeight: 700,
     fontSize: 64,
@@ -134,19 +156,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#B6B6B6",
     padding: 12,
   },
-  infoCard:{
+  infoCard: {
     backgroundColor: '#ffffff',
     borderRadius: 15,
     padding: 13,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  logo:{
+  logo: {
     height: 50,
     width: 50,
     marginRight: 18
   },
-  title:{
+  title: {
     fontFamily: 'Stetica',
     fontSize: 20,
   },
@@ -159,11 +181,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#485A6F',
     paddingVertical: 7,
   },
-  week:{
+  CurrentWeek: {
     fontSize: 15,
     color: "#B6B6B6",
     fontFamily: "Stetica",
     textAlign: 'center',
-
+  },
+  NonCurrentWeek: {
+    fontSize: 15,
+    color: "#262626",
+    fontFamily: "Stetica",
+    textAlign: 'center',
   }
 })

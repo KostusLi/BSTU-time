@@ -5,9 +5,6 @@ import LessonCard from '../schedule/LessonCard';
 
 import { getYear, formatDate } from '../../utils/dateHelpers';
 
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-SplashScreen.preventAutoHideAsync();
 
 interface DayScheduleProps {
   lessons: Lesson[];
@@ -17,14 +14,7 @@ interface DayScheduleProps {
 }
 
 const DaySchedule = ({ lessons, dayName, date, subgroup }: DayScheduleProps) => {
-  const [fontsLoaded] = useFonts({
-    'Anton': require('@/assets/fonts/Anton-Regular.ttf'),
-  });
-  if (!fontsLoaded) {
-    return null;
-  }
-
-  SplashScreen.hideAsync();
+  
   return (
     <View style={styles.container}>
 

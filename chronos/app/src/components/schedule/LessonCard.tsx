@@ -1,11 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Lesson } from '@/app/src/types/schedule';
-import * as Font from 'expo-font';
 
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-SplashScreen.preventAutoHideAsync();
 
 
 interface LessonCardProps {
@@ -13,12 +9,7 @@ interface LessonCardProps {
 }
 
 const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
- const [fontsLoaded] = useFonts({
-    'Stetica': require('@/assets/fonts/AA Stetica Bold.otf'),
-  });
-  if (!fontsLoaded) {
-    return null; // Ждем загрузки шрифтов
-  }
+ 
 
   return (
     <View style={styles.card}>
