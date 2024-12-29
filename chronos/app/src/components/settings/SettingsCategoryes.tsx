@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import Shevron from '@/assets/images/Chevron Down.png';
 import ScheduleSelector from './ScheduleSelector';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '@/app/src/context/ThemeContext';
+
 
 export default function SettingsCategoryes() {
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-
+    const { colors } = useTheme();
     const options = [
         {
             title: 'ВЫБРАТЬ РАСПИСАНИЕ',
@@ -15,12 +18,13 @@ export default function SettingsCategoryes() {
             title: 'КАРТА ВУЗА',
             content: (
                 <View style={styles.content}>
-                    <Text style={styles.text}>Отобразить карту</Text>
+                    <Text style={[styles.text, {color: colors.textHeader}]}>Отобразить карту</Text>
                 </View>
             ),
         },
         {
-            title: 'СМЕНИТЬ ТЕМУ'
+            title: 'СМЕНИТЬ ТЕМУ',
+            content: <ThemeToggle />
         },
     ];
 
@@ -29,20 +33,22 @@ export default function SettingsCategoryes() {
             {options.map((option, index) => (
                 <View key={index} style={styles.settingsCategory}>
                     <TouchableOpacity
-                        style={styles.categoryHeader}
-                        onPress={() => setExpandedIndex(index === expandedIndex ? null : index)}
+                    hitSlop={15}
+                        style={[styles.categoryHeader, { backgroundColor: colors.card }]}
+                    onPress={() => setExpandedIndex(index === expandedIndex ? null : index)}
                     >
-                        <Text style={styles.categoryHeaderText}>{option.title}</Text>
-                        {option.content && <Image source={Shevron} style={styles.arrowDown} />}
-                    </TouchableOpacity>
+                    <Text style={[styles.categoryHeaderText, {color: colors.textHeader}]}>{option.title}</Text>
+                    {option.content && <Image source={Shevron} style={styles.arrowDown} />}
+                </TouchableOpacity>
 
-                    {expandedIndex === index && option.content && (
-                        <View style={styles.contentContainer}>
-                            {option.content}
-                        </View>
-                    )}
-                </View>
-            ))}
+                    { expandedIndex === index && option.content && (
+                    <View style={[styles.contentContainer, {backgroundColor: colors.card}]}>
+                        {option.content}
+                    </View>
+                )}
+        </View >
+            ))
+}
         </>
     );
 }
@@ -52,7 +58,6 @@ const styles = StyleSheet.create({
         marginBottom: 39,
     },
     categoryHeader: {
-        backgroundColor: "#ffffff",
         borderRadius: 15,
         paddingVertical: 14,
         paddingHorizontal: 17,
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
     },
     categoryHeaderText: {
         textAlign: 'center',
-        color: "#5D5D5D",
+        
         fontFamily: 'Stetica',
         fontSize: 12,
         opacity: 0.9,
@@ -78,7 +83,7 @@ const styles = StyleSheet.create({
         top: 9,
     },
     contentContainer: {
-        backgroundColor: '#ffffff',
+        
         marginTop: -15,
         borderBottomLeftRadius: 15,
         borderBottomRightRadius: 15,
@@ -90,6 +95,5 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: 'Stetica',
         fontSize: 14,
-        color: '#5D5D5D',
     },
 });

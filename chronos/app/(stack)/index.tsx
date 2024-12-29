@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, StatusBar, Image, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import DaySchedule from '../components/schedule/DaySchedule';
-import { Schedule } from '../types/schedule';
+import { useRouter, usePathname } from 'expo-router';
+import DaySchedule from '../src/components/schedule/DaySchedule';
+import { Schedule } from '../src/types/schedule';
 
-import { getWeekDates } from '../utils/dateHelpers';
-
+import { getWeekDates } from '../src/utils/dateHelpers';
 
 
 import Placeholder from '@/assets/images/Ellipse 1.png';
 import SettingsLogo from '@/assets/images/Settings (1).png'
-import { loadSettings } from '../utils/storage';
+import { loadSettings } from '../src/utils/storage';
 
-
+import { useTheme } from '@/app/src/context/ThemeContext';
 
 export default function MainScreen() {
-
+  const { colors } = useTheme();
   const router = useRouter();
   const [weekNum, setWeekNum] = useState(0);
   const [settings, setSettings] = useState({
@@ -33,12 +31,13 @@ export default function MainScreen() {
       if (savedSettings) {
         setSettings(prevSettings => ({
           ...prevSettings,
-          ...savedSettings
+          ...savedSettings,
         }));
       }
     };
+  
     loadSavedSettings();
-  }, []);
+  }, [usePathname()]);
 
   const weekDates = getWeekDates(weekNum);
   const weekSchedule = Schedule.weeks[weekNum]?.days || [];
@@ -51,38 +50,39 @@ export default function MainScreen() {
 
   return (
     <>
-      <StatusBar backgroundColor={'#718296'} />
+      <StatusBar backgroundColor={colors.primary} />
       <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <Text style={styles.BSTU}>БГТУ</Text>
+        <View style={[styles.headerTop, {backgroundColor: colors.primary}]}>
+          <Text style={[styles.BSTU, {color: colors.secondaryBackgound}]}>БГТУ</Text>
           <Pressable
             style={styles.settingsContainer}
-            onPress={() => router.push('/src/screens/SettingsScreen')}
+            hitSlop={15}
+            onPress={() => router.navigate('/settings' as any)}
           >
             <Image style={styles.settings} source={SettingsLogo} />
           </Pressable>
         </View>
-        <View style={styles.headerInfo}>
-          <View style={styles.infoCard}>
-            <Image style={styles.logo} source={Placeholder} />
+        <View style={[styles.headerInfo, {backgroundColor: colors.secondaryBackgound}]}>
+          <View style={[styles.infoCard, {backgroundColor: colors.infoCard}]}>
+            <View style={[styles.logo, {backgroundColor: colors.secondaryBackgound}]} />
             <View>
-              <Text style={styles.title}>
+              <Text style={[styles.title, {color: colors.text}]}>
                 {`${settings.faculty} ${settings.speciality}-${settings.group}-${settings.subgroup}`}
               </Text>
-              <Text style={styles.subTitle}>{settings.course} курс</Text>
+              <Text style={[styles.subTitle, {color: colors.text}]}>{settings.course} курс</Text>
             </View>
           </View>
         </View>
-        <View style={styles.headerWeek}>
-          <Pressable 
-          hitSlop={10}
-          onPress={changeWeek}>
-            <Text style={styles.CurrentWeek}>WEEK {weekNum + 1}</Text>
+        <View style={[styles.headerWeek, {backgroundColor: colors.secondary}]}>
+          <Pressable
+            hitSlop={10}
+            onPress={changeWeek}>
+            <Text style={[styles.CurrentWeek, {color: colors.week}]}>WEEK {weekNum + 1}</Text>
           </Pressable>
         </View>
       </View>
 
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 75 }}>
+      <ScrollView style={[styles.container, {backgroundColor: colors.background}]} contentContainerStyle={{ paddingBottom: 75 }}>
         {weekSchedule.map((day, index) => (
           <DaySchedule
             key={day.name}
@@ -93,8 +93,7 @@ export default function MainScreen() {
           />
         ))}
       </ScrollView>
-      <View style={styles.bottomStripe}></View>
-    </>
+      <View style={[styles.bottomStripe, {backgroundColor: colors.primary}]}></View></>
   );
 }
 
@@ -102,14 +101,14 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 12,
     flex: 1,
-    backgroundColor: '#DADDE1',
+    
     paddingTop: 32,
   },
   bottomStripe: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    backgroundColor: '#718296',
+    
     height: 40,
     marginTop: 10,
   },
@@ -118,7 +117,7 @@ const styles = StyleSheet.create({
   },
   headerTop: {
     height: 80,
-    backgroundColor: '#718296',
+    
     paddingRight: 20,
     // paddingLeft: 10,
   },
@@ -138,17 +137,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Stetica',
     fontWeight: 700,
     fontSize: 64,
-    color: '#B6B6B6',
+    
     position: 'absolute',
     left: 10,
     bottom: -24,
   },
   headerInfo: {
-    backgroundColor: "#B6B6B6",
+    
     padding: 12,
   },
   infoCard: {
-    backgroundColor: '#ffffff',
+    
     borderRadius: 15,
     padding: 13,
     flexDirection: 'row',
@@ -157,7 +156,8 @@ const styles = StyleSheet.create({
   logo: {
     height: 50,
     width: 50,
-    marginRight: 18
+    marginRight: 18,
+    borderRadius: '50%',
   },
   title: {
     fontFamily: 'Stetica',
@@ -170,21 +170,15 @@ const styles = StyleSheet.create({
     opacity: 0.65,
   },
   headerWeek: {
-    backgroundColor: '#485A6F',
+    
     paddingVertical: 7,
   },
   CurrentWeek: {
     fontSize: 15,
-    color: "#B6B6B6",
+    
     fontFamily: "Stetica",
     textAlign: 'center',
     fontWeight: 700,
 
-  },
-  NonCurrentWeek: {
-    fontSize: 15,
-    color: "#262626",
-    fontFamily: "Stetica",
-    textAlign: 'center',
   }
 })

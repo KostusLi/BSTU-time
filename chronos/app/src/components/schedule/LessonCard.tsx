@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Lesson } from '@/app/src/types/schedule';
+import { useTheme } from '@/app/src/context/ThemeContext';
 
 
 
@@ -8,28 +9,49 @@ interface LessonCardProps {
   lesson: Lesson;
 }
 
+let mainColor: string;
+
 const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
+   const { colors } = useTheme();
+ 
+  switch (lesson.type) {
+    case "пз" : {
+      mainColor = colors.green
+      break;
+    }
+  
+    case "лк" : {
+      mainColor = colors.red
+      break;
+    }
+  
+    case "лр" : {
+      mainColor = colors.blue
+      break;
+    }
+   } 
+
  
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, {backgroundColor: colors.card}]}>
       <View style={styles.container}>
-        <View style={styles.leftStripe} />
+        <View style={[styles.leftStripe, {backgroundColor: mainColor}]} />
         <View style={styles.content}>
           <View style={styles.mainInfo}>
-            <Text style={styles.subject}>{lesson.subject.toUpperCase()}</Text>
-            <Text style={styles.location}>
+            <Text style={[styles.subject, {color: mainColor}]}>{lesson.subject.toUpperCase()}</Text>
+            <Text style={[styles.location, {color: colors.text}]}>
               {lesson.location ? `АУД. ${lesson.location.room}-${lesson.location.building}` : ''}
             </Text>
             {lesson.teacher && (
-              <Text style={styles.teacher}>
+              <Text style={[styles.teacher, {color: colors.text}]}>
                {lesson.teacher}
               </Text>
             )}
           </View>
           <View style={styles.rightInfo}>
-            {lesson.type && <Text style={styles.type}>{lesson.type.toUpperCase()}</Text>}
-            <Text style={styles.time}>
+            {lesson.type && <Text style={[styles.type, {color: mainColor}]}>{lesson.type.toUpperCase()}</Text>}
+            <Text style={[styles.time, {color: colors.text}]}>
               {lesson.timeSlot.start}-{lesson.timeSlot.end}
             </Text>
           </View>
@@ -43,7 +65,7 @@ const styles = StyleSheet.create({
   card: {
     // height: 120,
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    
     borderRadius: 12,
     padding: 12,
     marginTop: 4,
@@ -60,7 +82,6 @@ const styles = StyleSheet.create({
   },
   leftStripe: {
     width: 4,
-    backgroundColor: '#200EE2',
     borderRadius: 2,
     marginRight: 12,
   },
@@ -76,13 +97,13 @@ const styles = StyleSheet.create({
   subject: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#200EE2',
+    
     marginBottom: 4,
     fontFamily: 'Stetica'
   },
   location: {
     fontSize: 12,
-    color: '#000000',
+    
     opacity: 0.4,
     marginBottom: 4,
     fontFamily: 'Stetica',
@@ -91,7 +112,7 @@ const styles = StyleSheet.create({
   },
   teacher: {
     fontSize: 12,
-    color: '#000000',
+    
     opacity: 0.8,
     fontWeight: '700',
     fontFamily: 'Stetica'
@@ -103,13 +124,12 @@ const styles = StyleSheet.create({
   type: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#200EE2',
     marginBottom: 4,
     fontFamily: 'Stetica'
   },
   time: {
     fontSize: 12,
-    color: '#000000',
+    
     opacity: 0.4,
     fontWeight: '700',
     fontFamily: 'Stetica'

@@ -485,7 +485,7 @@ export const Schedule : Schedule = {
                               "start": "19:25",
                               "end": "21:00"
                           },
-                          "subject": "Коррупция и её общественная опасность",
+                          "subject": "Коррупция и её общественная опасность(можно не ходить)",
                           "type": "лк",
                           "location": {
                               "building": "4",
@@ -560,7 +560,8 @@ export const Schedule : Schedule = {
                           "location": {
                               "building": "2",
                               "room": "224"
-                          }
+                          },
+                          "subgroup" : 2,
                       }
                   ]
               }
