@@ -11,100 +11,84 @@ import { getWeekDates } from '../utils/dateHelpers';
 
 import Placeholder from '@/assets/images/Ellipse 1.png';
 import SettingsLogo from '@/assets/images/Settings (1).png'
+import { loadSettings } from '../utils/storage';
 
 
 
 export default function MainScreen() {
 
   const router = useRouter();
-
-  // Инициализация шрифтов
-  
-
-  const [appIsReady, setAppIsReady] = useState(false);
-
   const [weekNum, setWeekNum] = useState(0);
-  const [subgroup, setSubgroup] = useState(2);
-  const [faculty, setFaculty] = useState('ИТ');
-  const [speciality, setSpeciality] = useState('ПИ');
-  const [course, setCourse] = useState(1);
-  const [group, setGroup] = useState(9);
-  const [currentWeek, setCurrentWeek] = useState(0)
+  const [settings, setSettings] = useState({
+    faculty: 'ИТ',
+    speciality: 'ПИ',
+    course: 1,
+    group: 9,
+    subgroup: 2 as 1 | 2
+  });
+  
+  useEffect(() => {
+    const loadSavedSettings = async () => {
+      const savedSettings = await loadSettings();
+      if (savedSettings) {
+        setSettings(prevSettings => ({
+          ...prevSettings,
+          ...savedSettings
+        }));
+      }
+    };
+    loadSavedSettings();
+  }, []);
 
   const weekDates = getWeekDates(weekNum);
   const weekSchedule = Schedule.weeks[weekNum]?.days || [];
 
-
- 
-
   const changeWeek = () => {
-    setWeekNum(weekNum === 0 ? 1 : 0)
-  }
+    setWeekNum(weekNum === 0 ? 1 : 0);
+  };
+
 
 
   return (
     <>
-      <StatusBar
-        backgroundColor={'#718296'}
-      />
+      <StatusBar backgroundColor={'#718296'} />
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <Text style={styles.BSTU}>БГТУ</Text>
-
           <Pressable
             style={styles.settingsContainer}
             onPress={() => router.push('/src/screens/SettingsScreen')}
           >
-            <Image
-              style={styles.settings}
-              source={SettingsLogo}
-            />
+            <Image style={styles.settings} source={SettingsLogo} />
           </Pressable>
-
         </View>
         <View style={styles.headerInfo}>
           <View style={styles.infoCard}>
-            <Image style={styles.logo}
-              source={Placeholder}
-            />
-            <View >
+            <Image style={styles.logo} source={Placeholder} />
+            <View>
               <Text style={styles.title}>
-                {faculty + ' ' + speciality + '-' + group + '-' + subgroup}
+                {`${settings.faculty} ${settings.speciality}-${settings.group}-${settings.subgroup}`}
               </Text>
-              <Text style={styles.subTitle}>
-                {course} курс
-              </Text>
+              <Text style={styles.subTitle}>{settings.course} курс</Text>
             </View>
-
           </View>
-        </View>
-        <View style={styles.headerWeek}>
-          <Pressable
-            onPress={changeWeek}
-            hitSlop={20}
-          >
-            <Text style={weekNum === currentWeek ? styles.CurrentWeek : styles.NonCurrentWeek}> WEEK {weekNum + 1}</Text>
-          </Pressable>
         </View>
       </View>
 
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 75 }}>
-        {
-          weekSchedule.map((day, index) => (
-            <DaySchedule
-              key={day.name}
-              dayName={day.name}
-              lessons={day.lessons}
-              date={weekDates[index]}
-              subgroup={subgroup}
-            />
-          ))
-        }
+        {weekSchedule.map((day, index) => (
+          <DaySchedule
+            key={day.name}
+            dayName={day.name}
+            lessons={day.lessons}
+            date={weekDates[index]}
+            subgroup={settings.subgroup}
+          />
+        ))}
       </ScrollView>
       <View style={styles.bottomStripe}></View>
     </>
-
-  )
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,39 +1,26 @@
-import React, { useState } from 'react'
-
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Image, LayoutAnimation } from 'react-native'
-import Shevron from '@/assets/images/Chevron Down.png'
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import Shevron from '@/assets/images/Chevron Down.png';
+import ScheduleSelector from './ScheduleSelector';
 
 export default function SettingsCategoryes() {
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
-    const toggleExpand = (index: number) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        setExpandedIndex(index === expandedIndex ? null : index);
-    };
     const options = [
         {
             title: 'ВЫБРАТЬ РАСПИСАНИЕ',
-            content: (
-                <View style={[styles.content, styles.scheduleSettings]}>
-                    <Text style={styles.text}>Факультеты, курсы и группы</Text>
-                    <Text style={styles.text}>Факультеты, курсы и группы</Text>
-                    <Text style={styles.text}>Факультеты, курсы и группы</Text>
-                    <Text style={styles.text}>Факультеты, курсы и группы</Text>
-                </View>
-            ),
+            content: <ScheduleSelector />
         },
         {
             title: 'КАРТА ВУЗА',
             content: (
                 <View style={styles.content}>
                     <Text style={styles.text}>Отобразить карту</Text>
-                    <Text style={styles.text}>Отобразить карту</Text>
-                    <Text style={styles.text}>Отобразить карту</Text>
                 </View>
             ),
         },
         {
-            title: 'СМЕНИТЬ ТЕМУ',
+            title: 'СМЕНИТЬ ТЕМУ'
         },
     ];
 
@@ -43,19 +30,22 @@ export default function SettingsCategoryes() {
                 <View key={index} style={styles.settingsCategory}>
                     <TouchableOpacity
                         style={styles.categoryHeader}
-                        onPress={() => toggleExpand(index)}
+                        onPress={() => setExpandedIndex(index === expandedIndex ? null : index)}
                     >
                         <Text style={styles.categoryHeaderText}>{option.title}</Text>
-                        {option.content ? <Image source={Shevron} style={styles.arrowDown} /> : null}
+                        {option.content && <Image source={Shevron} style={styles.arrowDown} />}
                     </TouchableOpacity>
 
-                    {option.content ? (expandedIndex === index && <View>{option.content}</View>) : null}
+                    {expandedIndex === index && option.content && (
+                        <View style={styles.contentContainer}>
+                            {option.content}
+                        </View>
+                    )}
                 </View>
             ))}
         </>
-    )
+    );
 }
-
 
 const styles = StyleSheet.create({
     settingsCategory: {
@@ -73,7 +63,6 @@ const styles = StyleSheet.create({
         elevation: 7,
         zIndex: 10,
     },
-
     categoryHeaderText: {
         textAlign: 'center',
         color: "#5D5D5D",
@@ -88,10 +77,19 @@ const styles = StyleSheet.create({
         right: 17,
         top: 9,
     },
-    content: {
+    contentContainer: {
         backgroundColor: '#ffffff',
-        zIndex: 0,
         marginTop: -15,
-    }
-
-})
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
+        overflow: 'hidden',
+    },
+    content: {
+        padding: 16,
+    },
+    text: {
+        fontFamily: 'Stetica',
+        fontSize: 14,
+        color: '#5D5D5D',
+    },
+});
