@@ -1,0 +1,109 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background: #4488d7;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+.clock {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 5px solid white;
+    border-radius: 50%;
+    margin: 20px auto;
+    background-color: #4488d7; /* Цвет фона часов */
+}
+
+.hour-hand, .minute-hand, .second-hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom;
+    background-color: white;
+}
+
+.hour-hand {
+    width: 6px;
+    height: 30px;
+    border-radius: 3px;
+    transform: rotate(90deg); /* Начальное положение часовой стрелки */
+    animation: rotate-hour 43200s linear infinite; /* Вращение часовой стрелки */
+}
+
+.minute-hand {
+    width: 4px;
+    height: 40px;
+    border-radius: 2px;
+    transform: rotate(180deg); /* Начальное положение минутной стрелки */
+    animation: rotate-minute 3600s linear infinite; /* Вращение минутной стрелки */
+}
+
+.second-hand {
+    width: 2px;
+    height: 45px;
+    border-radius: 1px;
+    background-color: red; /* Цвет секундной стрелки */
+    transform: rotate(270deg); /* Начальное положение секундной стрелки */
+    animation: rotate-second 60s linear infinite; /* Вращение секундной стрелки */
+}
+
+@keyframes rotate-hour {
+    from { transform: rotate(90deg); }
+    to { transform: rotate(450deg); }
+}
+
+@keyframes rotate-minute {
+    from { transform: rotate(180deg); }
+    to { transform: rotate(540deg); }
+}
+
+@keyframes rotate-second {
+    from { transform: rotate(270deg); }
+    to { transform: rotate(630deg); }
+}
+
+main {
+    padding: 20px;
+}
+
+.developers {
+    background: white;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.developer {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-left: 5px solid #4488d7;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background: #333;
+    color: white;
+}
+
+.description
+{
+    background: white;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
