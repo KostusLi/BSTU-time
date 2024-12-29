@@ -17,7 +17,7 @@ export default function Index() {
 
   const [loaded, error] = useFonts({
     'Anton': require('@/assets/fonts/Anton-Regular.ttf'),
-    'Stetic': require('@/assets/fonts/AA Stetica Bold.otf'),
+    'Stetica': require('@/assets/fonts/AA Stetica Bold.otf'),
   });
   
   useEffect(() => {

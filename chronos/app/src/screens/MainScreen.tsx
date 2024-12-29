@@ -26,7 +26,7 @@ export default function MainScreen() {
     group: 9,
     subgroup: 2 as 1 | 2
   });
-  
+
   useEffect(() => {
     const loadSavedSettings = async () => {
       const savedSettings = await loadSettings();
@@ -72,6 +72,13 @@ export default function MainScreen() {
               <Text style={styles.subTitle}>{settings.course} курс</Text>
             </View>
           </View>
+        </View>
+        <View style={styles.headerWeek}>
+          <Pressable 
+          hitSlop={10}
+          onPress={changeWeek}>
+            <Text style={styles.CurrentWeek}>WEEK {weekNum + 1}</Text>
+          </Pressable>
         </View>
       </View>
 
@@ -159,6 +166,7 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 15,
     fontFamily: 'Stetica',
+    fontWeight: 700,
     opacity: 0.65,
   },
   headerWeek: {
@@ -170,6 +178,8 @@ const styles = StyleSheet.create({
     color: "#B6B6B6",
     fontFamily: "Stetica",
     textAlign: 'center',
+    fontWeight: 700,
+
   },
   NonCurrentWeek: {
     fontSize: 15,
